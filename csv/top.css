@@ -1,0 +1,10 @@
+.list-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.list-wrap a {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
