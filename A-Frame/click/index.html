@@ -1,0 +1,33 @@
+<html>
+<!--参考 https://qiita.com/yuya-s/items/cf37cc64a05e23f19e55 -->
+<head>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script>
+        var i = -1;
+        var COLORS = ['red', 'green', 'blue'];
+        AFRAME.registerComponent('change-color', {
+            init: function () {
+                this.el.addEventListener('click', function (evt) {
+                    i = (i + 1) % COLORS.length;
+                    this.setAttribute('material', 'color', COLORS[i]);
+                });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <a-scene>
+        <a-box change-color position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+        <a-sphere change-color position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+        <a-cylinder change-color position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        <a-sky color="#ECECEC"></a-sky>
+        <a-camera>
+            <!--焦点を表示-->
+            <a-cursor></a-cursor>
+        </a-camera>
+    </a-scene>
+</body>
+
+</html>
