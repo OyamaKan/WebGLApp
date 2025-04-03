@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
   <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"> </script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.2/dist/aframe-physics-system.min.js"></script>
   <script>
@@ -14,8 +14,13 @@
 
     <a-marker preset="custom" type='pattern' url='./pattern-opusstudio_logo_800x800.patt' id="marker">
       <a-entity hello-world></a-entity>
-      <a-sphere scale=".25 .25 .25" position="0 .5 0" color="#f00">
-      </a-sphere>
+      <a-plane static-body rotation="-90 0 0"  scale="3 3 3"></a-plane>
+      <a-light type="directional" position="20 40 20" intensity="1" castShadow="true"></a-light>
+      <a-entity scale="0.1 0.1 0.1" position="0 0.05 0">
+        <a-box scale="3 1 1" position="1.5 0 0" color="#F00"></a-box>
+        <a-box scale="1 3 1" position="0 1.5 0" color="#0F0"></a-box>
+        <a-box scale="1 1 3" position="0 0 1.5" color="#00F"></a-box>
+      </a-entity>
     </a-marker>
 
     <a-entity camera></a-entity>
@@ -26,7 +31,7 @@
       let marker = document.querySelector("#marker");
 
       marker.addEventListener("markerFound", function () {
-        console.log("マーカーが検出されました！", count);
+        console.log("マーカーが検出されました！");
       });
 
       marker.addEventListener("markerLost", function () {
