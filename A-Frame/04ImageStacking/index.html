@@ -9,11 +9,12 @@
   </script>
 </head>
 
-<body>
-  <a-scene arjs="patternRatio: 0.9">
+<!-- a-sceneが大きくなってスクロールバーが出るため非表示にする -->
+<body style="margin: 0px; overflow: hidden;">
+  <!--埋め込みにしないと画面サイズに合わせてバーチャルオブジェクトが伸びる-->
+  <a-scene embedded arjs="patternRatio: 0.9;">
 
     <a-marker preset="custom" type='pattern' url='./pattern-opusstudio_logo_800x800.patt' id="marker">
-      <a-entity hello-world></a-entity>
       <a-plane static-body rotation="-90 0 0"  scale="3 3 3"></a-plane>
       <a-light type="directional" position="20 40 20" intensity="1" castShadow="true"></a-light>
       <a-entity scale="0.1 0.1 0.1" position="0 0.05 0">
