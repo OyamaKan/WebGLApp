@@ -6,6 +6,10 @@
   <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"> </script>
   <script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.2/dist/aframe-physics-system.min.js"></script>
   <script>
+    function randomRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
     AFRAME.registerComponent("log", {
       tick: function (time, timeDelta) {
 
@@ -13,6 +17,31 @@
         console.log(`Position: y=${parentPosition.y}`);
       }
     });
+
+    AFRAME.registerComponent('dynamic-gravity', {
+      schema: {
+        target: { type: 'selector' }  // 重力の基準にするオブジェクト
+      },
+      init: function () {
+      },
+      tick: function () {
+        const target = this.data.target;
+        if (!target) return;
+
+        // オブジェクトの世界変換を取得
+        const object3D = target.object3D;
+
+        // ローカルの-Y軸（下向き）を世界座標で取得
+        const down = new THREE.Vector3(0, -1, 0);
+        down.applyQuaternion(object3D.quaternion).normalize();
+
+        // Cannon.jsの重力に適用
+        const physicsSystem = this.el.sceneEl.systems['physics'];
+        const world = physicsSystem.driver.world;
+        world.gravity.set(down.x * 9.8, down.y * 9.8, down.z * 9.8);
+      }
+    });
+
   </script>
 </head>
 
@@ -31,10 +60,9 @@
       <a-box static-body shape="box" scale="0.1 1 2" position="1 0.5 0" color="#EEE"></a-box>
       <a-box static-body shape="box" scale="0.1 1 2" position="-1 0.5 0" color="#EEE"></a-box>
 
-      <a-box dynamic-body scale="0.1 0.1 0.1" position="0 0.1 0" color="#F00"></a-box>
-
     </a-marker>
 
+    <a-entity dynamic-gravity="target: #marker"></a-entity>
     <a-entity camera></a-entity>
 
   </a-scene>
@@ -54,15 +82,22 @@
 
     let scene = document.querySelector("a-marker");
     let meshes = [];
-    const max = 100;
+    const max = 10;
 
     for (let i = 0; i < max; i++) {
-      let x = Math.random();
-      let y = Math.random();
-      let z = Math.random();
 
+      let x = randomRange(-1, 1) * 0.8;//やや内側よりにする
+      let y = randomRange(0.5, 1.5);
+      let z = randomRange(-1, 1) * 0.8;//やや内側よりにする
+      let mesh = instantBox(x, y, z, 1000);
+
+      meshes.push(mesh);
+
+    }
+
+    function instantBox(x, y, z, dynamicLag) {
       let mesh = document.createElement("a-box");
-      let scale = Math.min(0.1, Math.random() * 0.1 + 0.01);
+      let scale = randomRange(0.01, 0.2);
 
       scene.appendChild(mesh);
 
@@ -71,9 +106,12 @@
       mesh.setAttribute("color", `${getRandomHSLColor()};`);
       mesh.setAttribute("mass", Math.random() * 0.1 + 0.001);
 
-      meshes.push(mesh);
+      setTimeout(() => {
+        // いっぺんに生成して、生成時に物理をつけるとワールド座標で生成されるので、後からつけてる
+        mesh.setAttribute("dynamic-body", "shape: box;");
+      }, dynamicLag);
+      return mesh;
     }
-
     function getRandomHSLColor() {
       const h = Math.floor(Math.random() * 360); // 色相: 0〜359
       const s = Math.floor(Math.random() * 101); // 彩度: 0〜100%
@@ -82,11 +120,7 @@
     }
 
     document.addEventListener("click", (doc, event) => {
-
-      for (let i = 0; i < max; i++) {
-        let mesh = meshes[i];
-        mesh.setAttribute("dynamic-body","");
-      }
+      instantBox(0, 2, 0, 0);
     });
   </script>
 </body>
