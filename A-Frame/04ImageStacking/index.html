@@ -69,13 +69,18 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       let marker = document.querySelector("#marker");
+      let sceneEl = document.querySelector('a-scene');
 
       marker.addEventListener("markerFound", function () {
         console.log("マーカーが検出されました！");
+        // マーカー映ったら物理動かす
+        sceneEl.systems.physics.play();
       });
 
       marker.addEventListener("markerLost", function () {
         console.log("マーカーが見えなくなりました...");
+        // マーカー消えたら物理を止める
+        sceneEl.systems.physics.pause();
       });
     });
 
@@ -120,7 +125,8 @@
     }
 
     document.addEventListener("click", (doc, event) => {
-      instantBox(0, 2, 0, 0);
+      let mesh = instantBox(0, 2, 0, 0);
+      meshes.push(mesh);
     });
   </script>
 </body>
