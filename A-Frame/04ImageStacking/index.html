@@ -117,10 +117,11 @@
       }, dynamicLag);
       return mesh;
     }
+
     function getRandomHSLColor() {
-      const h = Math.floor(Math.random() * 360); // 色相: 0〜359
-      const s = Math.floor(Math.random() * 101); // 彩度: 0〜100%
-      const l = Math.floor(Math.random() * 101); // 明度: 0〜100%
+      const h = Math.floor(Math.random() * 360);       // 色相: 全体から
+      const s = Math.floor(Math.random() * 30) + 70;   // 彩度: 70〜100%
+      const l = Math.floor(Math.random() * 30) + 60;   // 明度: 60〜90%
       return `hsl(${h}, ${s}%, ${l}%)`;
     }
 
